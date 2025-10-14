@@ -8,6 +8,7 @@ def summa():
         return a + b
     return suma
 
+# testing carry_explicit
 def test_basic(summa):
     curr = curry_explicit(summa, 2)
     result = curr(1)(2)
@@ -32,7 +33,7 @@ def test_print():
     result = curr(1)(2)
     assert result is None
 
-# тестируем исключения
+# testing exeption
 def test_exeption_unpositiv(summa):
     with pytest.raises(ValueError):
         result = curry_explicit(summa, -2)
@@ -41,7 +42,7 @@ def test_exeption_mistake(summa):
     with pytest.raises(VaalueError):
         result = curry_explicit(summa, 10)
 
-# тестируем uncurry
+# testing uncurry_explicit
 def test_uncurry(summa):
     curr = curry_explicit(summa, 2)
     uncurr = uncurry_explicit(curr, 2)
