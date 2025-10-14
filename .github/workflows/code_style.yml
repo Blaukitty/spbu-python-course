@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install black isort autoflake
+          pip install black isort autoflake mypy pytest
 
       - name: Apply automatic formatting
         run: |
