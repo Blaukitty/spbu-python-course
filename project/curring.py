@@ -12,6 +12,11 @@ def curry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., An
     Returns:
         A curried version of the input function
     """
+    # Handle exceptions
+    if len(function(*args)) != arity:
+        raise ValueError('Invalid number of arguments')
+    if arity < 0:
+        raise ValueError('Arity have to be positive')
     def curry(*args: Any) -> Any:
         # If enough arguments have been accumulated, call the original function
         if arity <= len(args):
@@ -37,6 +42,11 @@ def uncurry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., 
     Returns:
         An uncurried version of the input function
     """
+    # Handle exceptions
+    if len(function(*args)) != arity:
+        raise ValueError('Invalid number of arguments')
+    if arity < 0:
+        raise ValueError('Arity have to be positive')
     def uncurry(*args: Any) -> Any:
         # Sequentially apply all arguments to the curried function
         res = function
