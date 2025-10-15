@@ -14,7 +14,7 @@ def curry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., An
     """
     # Handle exceptions
     if arity < 0:
-        raise ValueError('Arity have to be positive')
+        raise ValueError('Arity have to be positive or zero')
     def curry(*args: Any) -> Any:
         if arity < len(args):
             raise ValueError(f'Function expects {arity} arguments, but {len(args)} were given')
