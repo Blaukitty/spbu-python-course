@@ -34,11 +34,19 @@ def test_print():
     assert result is None
 
 # testing exeption
-def test_exeption_unpositiv(summa):
+def test_exeption_unpositiv(summa): # for curry_explicit
     with pytest.raises(ValueError):
         result = curry_explicit(summa, -2)
 
 def test_exeption_mistake(summa):
+    with pytest.raises(VaalueError):
+        result = curry_explicit(summa, 10)
+
+def test_exeption_unpositiv_un(summa): # for uncurry_explicit
+    with pytest.raises(ValueError):
+        result = curry_explicit(summa, -2)
+
+def test_exeption_mistake_un(summa):
     with pytest.raises(VaalueError):
         result = curry_explicit(summa, 10)
 
