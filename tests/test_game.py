@@ -91,7 +91,7 @@ class TestGame:
 
 
     def test_game_state():
-    '''Test that game state is changing '''
+    """Test that game state is changing"""
         game = Game()
     
         start_bot1_money = game.bet1.money
