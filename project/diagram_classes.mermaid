@@ -92,14 +92,11 @@ classDiagram
     Bots --> StrategyType : uses
     Bet777 --> BetType : uses
     Strategies --> StrategyType : uses
-    Martingeil --> StrategyType : uses
     Game --> Ruller : has
     Game --> Bots : has
     Game --> Bet777 : has
     Game --> Strategies : uses
-    Game --> Martingeil : uses
 
     %% Dependency relationships
-    Strategies ..> Martingeil : calls
     Bots ..> Color : creates
     Bots ..> StrategyType : creates
