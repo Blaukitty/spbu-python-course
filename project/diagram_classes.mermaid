@@ -1,0 +1,110 @@
+classDiagram
+    %% Enumerations
+    class StrategyType {
+        <<enumeration>>
+        DALAMBER
+        MARTINGEIL
+        ALL_CAPITAL
+    }
+
+    class Color {
+        <<enumeration>>
+        RED
+        BLACK
+        GREEN
+    }
+
+    class BetType {
+        <<enumeration>>
+        SINGLE
+        COLOR
+        DOZEN
+        EVEN_ODD
+        RANGE
+        PAYOUTS : Dict[BetType, int]
+    }
+
+    %% Main Classes
+    class Ruller {
+        -numbers: List[int]
+        -number_cur: Optional[int]
+        -color_cur: Optional[Color]
+        +ruller_spin() Tuple[int, Color]
+        +ruller_color(numb: int) Color
+        +get_result() Tuple[Optional[int], Optional[Color]]
+    }
+
+    class Bots {
+        -diapason: List[int]
+        -color_b: Optional[Color]
+        -indicator: StrategyType
+        -ifwin: bool
+        -number1_b: int
+        -number2_b: int
+        +choice() Tuple[Color, List[int]]
+        +color_choice() Color
+        +get_choice() List[int]
+    }
+
+    class Bet777 {
+        -money: int
+        -xbet: int
+        -bet_type: BetType
+        +PAYOUTS: Dict[BetType, int]
+        +capital(money: int) void
+        +bet(xbet: int) void
+        +get_payout() int
+        +get_choice() Tuple[int, int]
+    }
+
+    class Strategies {
+        <<static>>
+        +choose_strategy(curva_bet: int, ifwin: bool, money: int, indicator: Optional[StrategyType]) int
+        +dalamber(curva_bet: int, ifwin: bool, money: int) int
+        +all_capital(curva_bet: int, ifwin: bool, money: int) int
+    }
+
+    class Martingeil {
+        <<static>>
+        +martingeil(curva_bet: int, ifwin: bool, money: int) int
+    }
+
+    class Game {
+        -bots: List[Bots]
+        -bets: List[Bet777]
+        -roulette: Ruller
+        -flag: int
+        -indicator: int
+        -ifwin: bool
+        -gain: int
+        +full_money() int
+        +apply_strategy_to_bot(bot_index: int) int
+        +play_round(bot_index: int) void
+        +check_win(bot_index: int, roulette_result: Tuple[int, Color]) void
+        +_is_in_dozen(number: int, dozen: int) bool
+        +_is_even_odd_match(number: int, even_odd: str) bool
+        +play_game(max_rounds: int) void
+        +declare_winner() void
+        +add_bot() void
+        +remove_bot(bot_index: int) void
+        +get_bot_count() int
+        +list_bots() void
+    }
+
+    %% Relationships
+    Ruller --> Color : uses
+    Bots --> Color : uses
+    Bots --> StrategyType : uses
+    Bet777 --> BetType : uses
+    Strategies --> StrategyType : uses
+    Martingeil --> StrategyType : uses
+    Game --> Ruller : has
+    Game --> Bots : has
+    Game --> Bet777 : has
+    Game --> Strategies : uses
+    Game --> Martingeil : uses
+
+    %% Dependency relationships
+    Strategies ..> Martingeil : calls
+    Bots ..> Color : creates
+    Bots ..> StrategyType : creates
