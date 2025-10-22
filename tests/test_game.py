@@ -88,3 +88,20 @@ class TestGame:
         game.bet1.xbet = 150
         game.bet2.xbet = 200
         assert game.full_money() == 350            
+
+
+    def test_game_state():
+    '''Test that game state is changing '''
+        game = Game()
+    
+        start_bot1_money = game.bet1.money
+        start_bot2_money = game.bet2.money
+    
+        game.play_round(1)
+        game.play_round(2)
+    
+        end_bot1_money = game.bet1.money
+        end_bot2_money = game.bet2.money
+
+        assert (start_bot1_money != end_bot1_money or start_bot2_money != end_bot2_money)
+        
