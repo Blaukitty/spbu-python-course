@@ -10,7 +10,6 @@ class Game {
   - indicator: int
   - ifwin: bool
   - gain: int
-  + __init__()
   + full_money(): int
   + apply_strategy_to_bot(bot_number: int): int
   + play_round(bot_number: int)
