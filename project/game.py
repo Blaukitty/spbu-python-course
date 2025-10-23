@@ -163,7 +163,7 @@ class Bet777:
         xbet (int): Current bet amount
         bet_type (str): Type of current bet
     """
-    PAYOUTS = {
+    payouts = {
         BetType.SINGLE: 35,
         BetType.COLOR: 2,
         BetType.DOZEN: 3,
@@ -199,7 +199,7 @@ class Bet777:
 
 class Strategies:
     """Class containing different betting strategies."""
-    
+    base_bet: int = 100
     @staticmethod
     def choose_strategy(curva_bet: int, ifwin: bool, money: int, 
                        indicator: Optional[int] = None) -> int:
@@ -209,15 +209,7 @@ class Strategies:
             curva_bet: Current bet amount
             ifwin: Win status from previous round
             money: Current money amount
-            indicator: Optional strategy indicator (ignored, random selection used)
-        actual_indicator = randint(StrategyType.DALAMBER, StrategyType.ALL_CAPITAL)
-        
-        if actual_indicator == StrategyType.DALAMBER:
-            return Strategies.dalamber(curva_bet, ifwin, money)
-        elif actual_indicator == StrategyType.MARTINGEIL:
-            return Strategies.martingeil(curva_bet, ifwin, money)
-        else:
-            return Strategies.all_capital(curva_bet, ifwin, money)
+            indicator: Optional strategy indicator (ignored, random selection used)        
         """
         actual_indicator = randint(StrategyType.DALAMBER, StrategyType.ALL_CAPITAL)
         
@@ -246,11 +238,13 @@ class Strategies:
     
     @staticmethod
     def martingeil(curva_bet: int, ifwin: bool, money: int) -> int:
+        
         """Martingale betting strategy - double on loss, reset on win."""
-        if not ifwin:
-            return min(curva_bet * 2, money)
+        if ifwin:
+            return Strategies.BASE_BET
         else:
-            return curva_bet
+            new_bet = curva_bet * 2
+            return min(new_bet, money)
 
 class Game:
     """Main game class managing roulette game between multiple bots.
