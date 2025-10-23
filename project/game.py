@@ -318,7 +318,7 @@ class Game:
 
         if self.bets[bot_index].money <= 0:
             print(f"  Бот{bot_index + 1} банкрот и не может играть")
-            return 0
+            return
 
         current_new_bet: int = self.apply_strategy(bot_index)
         print(f"Бот{bot_index + 1} сделал ставку: {current_new_bet}")
@@ -401,7 +401,6 @@ class Game:
                 
                 current_bet.money += self.gain - current_bet.xbet
                 current_bot.ifwin = self.ifwin
-                return
 
         self.ifwin = is_win
         self.gain = current_bet.xbet * payout_multiplier if is_win else 0
