@@ -171,7 +171,7 @@ class Bet777:
         BetType.RANGE: 2
     }
     
-    def __init__(self, money: int = 1000, xbet: int = 100, bet_type: str = None) -> None:
+    def __init__(self, money: int = 1000, xbet: int = 100, bet_type: Optional[str] = None) -> None:
         """Initialize bet with money and bet amount."""
         self.money: int = money
         self.xbet: int = xbet
@@ -320,7 +320,7 @@ class Game:
             print(f"  Бот{bot_index + 1} банкрот и не может играть")
             return 0
 
-        current_new_bet: int = self.apply_strategy_to_bot(bot_index)
+        current_new_bet: int = self.apply_strategy(bot_index)
         print(f"Бот{bot_index + 1} сделал ставку: {current_new_bet}")
 
         current_bot_choice: Tuple[str, List[int]] = self.bots[bot_index].choice()
@@ -381,7 +381,6 @@ class Game:
                 
                 current_bet.money += self.gain - current_bet.xbet
                 current_bot.ifwin = self.ifwin
-                return
 
             else:
                 if (winning_number in bot_choice) and (winning_color == bot_color):
@@ -420,7 +419,7 @@ class Game:
         current_bet.money += self.gain - current_bet.xbet
         current_bot.ifwin = self.ifwin
 
-    def is_in_dozen(self, number: int, dozen: int) -> bool:
+    def _is_in_dozen(self, number: int, dozen: int) -> bool:
         """Check if number is in specified dozen."""
         if dozen == 1:
             return 1 <= number <= 12
@@ -430,7 +429,7 @@ class Game:
             return 25 <= number <= 36
         return False
 
-    def is_even_odd(self, number: int, even_odd: str) -> bool:
+    def _is_even_odd(self, number: int, even_odd: str) -> bool:
         """Check if number matches even/odd selection."""
         if even_odd == "even":
             return number % 2 == 0 and number != 0
