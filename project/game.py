@@ -191,7 +191,7 @@ class Bet777:
 
     def get_payout(self) -> int:
         """Get payout multiplier for current bet type."""
-        return self.PAYOUTS.get(self.bet_type, 2)
+        return self.payouts.get(self.bet_type, 2)
 
     def get_choice(self) -> Tuple[int, int]:
         """Get current money and bet status."""
@@ -241,7 +241,7 @@ class Strategies:
         
         """Martingale betting strategy - double on loss, reset on win."""
         if ifwin:
-            return Strategies.BASE_BET
+            return Strategies.base_bet
         else:
             new_bet = curva_bet * 2
             return min(new_bet, money)
