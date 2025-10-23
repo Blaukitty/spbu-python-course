@@ -362,7 +362,7 @@ class Game:
 
         elif current_bet.bet_type == BetType.EVEN_ODD:
             selected_even_odd = getattr(current_bot, 'selected_even_odd', 'even' if randint(1, 2) == 1 else 'odd')
-            is_win = self._is_even_odd_match(winning_number, selected_even_odd)
+            is_win = self._is_even_odd(winning_number, selected_even_odd)
             payout_multiplier = 2
             bet_description = f"{'четные' if selected_even_odd == 'even' else 'нечетные'} числа"
 
@@ -384,7 +384,7 @@ class Game:
 
             else:
                 if (winning_number in bot_choice) and (winning_color == bot_color):
-                    self.gain = int(current_bet.xbet * 1.5)
+                    self.gain = int(current_bet.xbet * 0.75)
                     self.ifwin = True
                     print(f'  Попал в диапазон и угадал с цветом')
                     print(f" - была выбрана стратегия {strategies[current_bot.indicator]}, капитал теперь {current_bet.money + self.gain - current_bet.xbet}\n")
