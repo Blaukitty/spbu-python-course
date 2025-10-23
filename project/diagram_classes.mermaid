@@ -14,6 +14,13 @@ classDiagram
         GREEN
     }
 
+    Class ColorType {
+        <<enumeration>>
+        1
+        2
+        3
+    }
+
     class BetType {
         <<enumeration>>
         SINGLE
@@ -28,7 +35,7 @@ classDiagram
     class Ruller {
         -numbers: List[int]
         -number_cur: Optional[int]
-        -color_cur: Optional[Color]
+        -color_cur: Optional[str]
         +ruller_spin() Tuple[int, Color]
         +ruller_color(numb: int) Color
         +get_result() Tuple[Optional[int], Optional[Color]]
@@ -36,11 +43,13 @@ classDiagram
 
     class Bots {
         -diapason: List[int]
-        -color_b: Optional[Color]
-        -indicator: StrategyType
+        -color_b: Optional[str]
+        -indicator: int
         -ifwin: bool
         -number1_b: int
         -number2_b: int
+        -selected_dozen: int
+        -selected_even_odd: str
         +choice() Tuple[Color, List[int]]
         +color_choice() Color
         +get_choice() List[int]
@@ -49,12 +58,13 @@ classDiagram
     class Bet777 {
         -money: int
         -xbet: int
-        -bet_type: BetType
+        -bet_type: str
         +PAYOUTS: Dict[BetType, int]
         +capital(money: int) void
         +bet(xbet: int) void
         +get_payout() int
         +get_choice() Tuple[int, int]
+        +random_bet_type(): str
     }
 
     class Strategies {
@@ -73,17 +83,15 @@ classDiagram
         -ifwin: bool
         -gain: int
         +full_money() int
-        +apply_strategy_to_bot(bot_index: int) int
+        +apply_strategy(bot_index: int) int
         +play_round(bot_index: int) void
         +check_win(bot_index: int, roulette_result: Tuple[int, Color]) void
-        +_is_in_dozen(number: int, dozen: int) bool
-        +_is_even_odd_match(number: int, even_odd: str) bool
-        +play_game(max_rounds: int) void
-        +declare_winner() void
-        +add_bot() void
-        +remove_bot(bot_index: int) void
-        +get_bot_count() int
-        +list_bots() void
+        +is_in_dozen(number: int, dozen: int) bool
+        +is_even_odd(number: int, even_odd: str) bool
+        +play_game(max_rounds: int): void
+        +declare_winner(): void
+        +add_bot(): void
+        +get_bots(): int
     }
 
     %% Relationships
