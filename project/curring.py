@@ -51,6 +51,6 @@ def uncurry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., 
         for ar in args:
             res = res(ar)
         if kwargs:
-            res = result(**kwargs)
+            res = res(**kwargs)
         return res
     return uncurry
