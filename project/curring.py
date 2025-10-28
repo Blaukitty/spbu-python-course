@@ -12,22 +12,21 @@ def curry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., An
     Returns:
         A curried version of the input function
     """
-    # Handle exceptions
     if arity < 0:
         raise ValueError('Arity have to be positive or zero')
-    def curry(*args: Any) -> Any:
-        if arity < len(args):
-            raise ValueError(f'Function expects {arity} arguments, but {len(args)} were given')
-        # If enough arguments have been accumulated, call the original function
-        if arity == len(args):
-            return function(*args)
+    def curry(*args: Any, **kwargs: Any) -> Any:
+        total = len(args) + len(kwargs)
+        if arity < total:
+            raise ValueError(f'Function expects {arity} arguments, but {total} were given')
+        if arity == total:
+            return function(*args, **kwargs)
         else:
-            # Otherwise return a new function that remembers current arguments
-            def new(*new_args: Any) -> Any:
+            def new(*new_args: Any, **next_kwargs: Any) -> Any:
                 all_ar = args + new_args
-                return curry(*all_ar)
+                all_kwa = kwargs.copy()
+                all_kwa.update(next_kwargs)
+                return curry(*all_ar, **all_kwa)
             return new
-
     return curry
 
 
@@ -42,16 +41,16 @@ def uncurry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., 
     Returns:
         An uncurried version of the input function
     """
-    # Handle exceptions
     if arity < 0:
         raise ValueError('Arity have to be positive')
-    def uncurry(*args: Any) -> Any:
-        if arity != len(args):
-            raise ValueError(f'Function expects {arity} arguments, but {len(args)} were given')
-        # Sequentially apply all arguments to the curried function
+    def uncurry(*args: Any, **kwargs: Any) -> Any:
+        total = len(args) + len(kwargs)
+        if arity != total:
+            raise ValueError(f'Function expects {arity} arguments, but {total} were given')
         res = function
         for ar in args:
             res = res(ar)
+        if kwargs:
+            res = result(**kwargs)
         return res
-
     return uncurry
