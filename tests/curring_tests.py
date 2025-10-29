@@ -52,10 +52,14 @@ def test_curry_fixes_arity_for_max():
     with pytest.raises(TypeError, match="'int' object is not callable"):
         curried_max(5)(10)(15)
 
-    with pytest.raises(ValueError, match="Function expects 2 arguments, but 3 were given"):
+    with pytest.raises(
+        ValueError, match="Function expects 2 arguments, but 3 were given"
+    ):
         curried_max(5, 10, 15)
 
-    with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
+    with pytest.raises(
+        ValueError, match="Function expects 1 arguments, but 2 were given"
+    ):
         inter = curried_max(5)
         inter(10, 15)
 
@@ -91,11 +95,17 @@ def test_curry_no_multiple(three):
     """You cannot pass multiple arguments in a single call to a curried function"""
     curried_add = curry_explicit(three, 3)
 
-    with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
+    with pytest.raises(
+        ValueError, match="Function expects 1 arguments, but 2 were given"
+    ):
         curried_add(1, 2)(3)
 
-    with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
+    with pytest.raises(
+        ValueError, match="Function expects 1 arguments, but 2 were given"
+    ):
         curried_add(1)(2, 3)
 
-    with pytest.raises(ValueError, match="Function expects 1 arguments, but 3 were given"):
+    with pytest.raises(
+        ValueError, match="Function expects 1 arguments, but 3 were given"
+    ):
         curried_add(1, 2, 3)
