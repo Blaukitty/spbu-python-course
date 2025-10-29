@@ -34,18 +34,22 @@ def test_one():
     assert result == 1
     
 
-def test_curry_fixes_arity():
-    """curry_explicit freezes arity for arbitrary-ary functions"""
-    
-    curried_print = curry_explicit(print, 2)
-    result = curried_print("Hello")("World")
-    assert result is None
-    
-    with pytest.raises(TypeError, match="'NoneType' object is not callable"):
-        curried_print("Hello")("World")("Extra")
-    
+def test_curry_fixes_arity_for_max():
+    """curry_explicit fixes arity for function max"""
+    curried_max = curry_explicit(max, 2)
+
+    result = curried_max(5)(10)
+    assert result == 10
+
+    with pytest.raises(TypeError, match="'int' object is not callable"):
+        curried_max(5)(10)(15)
+
     with pytest.raises(ValueError, match="Function expects 2 arguments, but 3 were given"):
-        curried_print("Hello", "World", "Extra")
+        curried_max(5, 10, 15)
+    
+    with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
+        inter = curried_max(5)
+        inter(10, 15)
 
 
 def test_unpositiv(summa):
