@@ -10,6 +10,14 @@ def summa():
     return suma
 
 
+@pytest.fixture
+def three():
+    def add_three(a, b, c):
+        return a + b + c
+
+    return add_three
+
+
 def test_basic(summa):
     curr = curry_explicit(summa, 2)
     result = curr(1)(2)
@@ -32,7 +40,7 @@ def test_one():
     curr = curry_explicit(one_ar, 1)
     result = curr(1)
     assert result == 1
-    
+
 
 def test_curry_fixes_arity_for_max():
     """curry_explicit fixes arity for function max"""
@@ -46,7 +54,7 @@ def test_curry_fixes_arity_for_max():
 
     with pytest.raises(ValueError, match="Function expects 2 arguments, but 3 were given"):
         curried_max(5, 10, 15)
-    
+
     with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
         inter = curried_max(5)
         inter(10, 15)
@@ -78,21 +86,16 @@ def test_uncurry(summa):
     result = uncurr(1, 2)
     assert result == 3
 
-@pytest.fixture
-def three:
-    def add_three(a, b, c):
-        return a + b + c
-    return add_three
 
 def test_curry_no_multiple(three):
-    """You cannot pass multiple arguments in a single call to a curried function"""    
+    """You cannot pass multiple arguments in a single call to a curried function"""
     curried_add = curry_explicit(three, 3)
-    
+
     with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
         curried_add(1, 2)(3)
-    
+
     with pytest.raises(ValueError, match="Function expects 1 arguments, but 2 were given"):
         curried_add(1)(2, 3)
-    
+
     with pytest.raises(ValueError, match="Function expects 1 arguments, but 3 were given"):
         curried_add(1, 2, 3)
