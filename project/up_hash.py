@@ -1,8 +1,7 @@
 import threading
 from collections.abc import MutableMapping
 from multiprocessing import Manager
-from multiprocessing.managers import ListProxy
-from typing import Any, Iterator, List, Optional, Tuple, Union
+from typing import Any, Iterator, List, Optional, Tuple
 
 
 class HashTable(MutableMapping):
@@ -29,21 +28,16 @@ class HashTable(MutableMapping):
         self.num_locks = num_locks
         self.len_table = len_table
         self.manager = Manager()
-        self.hesh_table: Union[
-            ListProxy,
-            List[Optional[List[Tuple[Any, Any]]]]
-        ] = self._init_hesh_table()
-
-    def _init_hesh_table(
-        self
-    ) -> Union[ListProxy, List[Optional[List[Tuple[Any, Any]]]]]:
+        self.hesh_table = self._init_hesh_table()
+        
+    def _init_hesh_table(self) -> Any:
         """
         Initialize hash table from dictionary data.
 
         Returns:
             List representing the hash table
         """
-        hesh_table: ListProxy = self.manager.list([None] * self.len_table)
+        hesh_table = self.manager.list([None] * self.len_table)
         self._lock = [threading.Lock() for _ in range(self.num_locks)]
 
         for key, value in self.dict_data.items():
