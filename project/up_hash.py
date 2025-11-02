@@ -18,11 +18,6 @@ class HashTable(MutableMapping):
     ) -> None:
         """
         Initialize the hash table.
-
-        Args:
-            num_locks: Number of locks for fine-grained synchronization
-            len_table: Size of the hash table
-            dict_data: Initial data to populate the table
         """
         self.dict_data = dict_data or {}
         self.num_locks = num_locks
@@ -33,9 +28,6 @@ class HashTable(MutableMapping):
     def _init_hesh_table(self) -> Any:
         """
         Initialize hash table from dictionary data.
-
-        Returns:
-            List representing the hash table
         """
         hesh_table = self.manager.list()
         for _ in range(self.len_table):
@@ -68,15 +60,6 @@ class HashTable(MutableMapping):
     def __getitem__(self, key: Any) -> Any:
         """
         Get the value associated with the key.
-
-        Args:
-            key: Key to look up
-
-        Returns:
-            Value associated with the key
-
-        Raises:
-            KeyError: If key is not found
         """
         bucket_index = self._get_bucket_index(key)
         lock_index = self._get_lock_index(key)
@@ -95,10 +78,6 @@ class HashTable(MutableMapping):
     def __setitem__(self, key: Any, value: Any) -> None:
         """
         Set the value for the key in the table.
-
-        Args:
-            key: Key to set
-            value: Value to associate with the key
         """
         bucket_index = self._get_bucket_index(key)
         lock_index = self._get_lock_index(key)
@@ -128,12 +107,6 @@ class HashTable(MutableMapping):
     def __delitem__(self, key: Any) -> None:
         """
         Delete the key-value pair from the table.
-
-        Args:
-            key: Key to delete
-
-        Raises:
-            KeyError: If key is not found
         """
         bucket_index = self._get_bucket_index(key)
         lock_index = self._get_lock_index(key)
@@ -163,9 +136,6 @@ class HashTable(MutableMapping):
     def __iter__(self) -> Iterator[Any]:
         """
         Iterate over all keys in the table.
-
-        Returns:
-            Iterator over all keys
         """
         acquired_locks = []
         try:
@@ -184,9 +154,6 @@ class HashTable(MutableMapping):
     def __len__(self) -> int:
         """
         Get the number of key-value pairs in the table.
-
-        Returns:
-            Number of key-value pairs
         """
         count = 0
         acquired_locks = []
@@ -206,12 +173,6 @@ class HashTable(MutableMapping):
     def __contains__(self, key: Any) -> bool:
         """
         Check if the key exists in the table.
-
-        Args:
-            key: Key to check
-
-        Returns:
-            True if key exists, False otherwise
         """
         bucket_index = self._get_bucket_index(key)
         lock_index = self._get_lock_index(key)
