@@ -1,7 +1,7 @@
 import time
 import pytest
 from multiprocessing import Process, Manager
-from project.up_hash import HashTable
+from project.up_hash import UpHashTable
 
 class TestThreadSafeHashTable:
     """Test suite for thread-safe HashTable implementation using pytest"""
