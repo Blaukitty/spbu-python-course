@@ -37,7 +37,11 @@ class HashTable(MutableMapping):
         Returns:
             List representing the hash table
         """
-        hesh_table = self.manager.list([None] * self.len_table)
+        # Create shared list with proper type handling
+        hesh_table = self.manager.list()
+        for _ in range(self.len_table):
+            hesh_table.append(None)
+            
         self._lock = [threading.Lock() for _ in range(self.num_locks)]
 
         for key, value in self.dict_data.items():
@@ -46,10 +50,12 @@ class HashTable(MutableMapping):
             with self._lock[lock_index]:
                 existing_list = hesh_table[bucket_index]
                 if existing_list is not None:
+                    # Create new shared list and update
                     new_list = self.manager.list(existing_list)
                     new_list.append((key, value))
                     hesh_table[bucket_index] = new_list
                 else:
+                    # Create new shared list for this bucket
                     hesh_table[bucket_index] = self.manager.list([(key, value)])
 
         return hesh_table
@@ -81,13 +87,13 @@ class HashTable(MutableMapping):
         with self._lock[lock_index]:
             data_list = self.hesh_table[bucket_index]
             if data_list is None:
-                raise KeyError(f"Key not found")
+                raise KeyError(f"Key '{key}' not found")
 
             for stored_key, value in data_list:
                 if stored_key == key:
                     return value
 
-            raise KeyError(f"Key not found")
+            raise KeyError(f"Key '{key}' not found")
 
     def __setitem__(self, key: Any, value: Any) -> None:
         """
@@ -107,8 +113,10 @@ class HashTable(MutableMapping):
                 self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
 
+            # Create new list to avoid modifying shared list directly
             new_list = self.manager.list()
             key_found = False
+            
             for stored_key, stored_value in data_list:
                 if stored_key == key:
                     new_list.append((key, value))
@@ -137,10 +145,11 @@ class HashTable(MutableMapping):
         with self._lock[lock_index]:
             data_list = self.hesh_table[bucket_index]
             if data_list is None:
-                raise KeyError(f"Key not found")
+                raise KeyError(f"Key '{key}' not found")
 
             new_list = self.manager.list()
             key_found = False
+            
             for stored_key, stored_value in data_list:
                 if stored_key == key:
                     key_found = True
@@ -148,7 +157,7 @@ class HashTable(MutableMapping):
                     new_list.append((stored_key, stored_value))
 
             if not key_found:
-                raise KeyError(f"Key not found")
+                raise KeyError(f"Key '{key}' not found")
 
             if len(new_list) == 0:
                 self.hesh_table[bucket_index] = None
@@ -220,33 +229,3 @@ class HashTable(MutableMapping):
                 if stored_key == key:
                     return True
             return False
-
-    def get(self, key: Any, default: Any = None) -> Any:
-        """
-        Get value for key, return default if key not found.
-
-        Args:
-            key: Key to look up
-            default: Default value to return if key not found
-
-        Returns:
-            Value or default
-        """
-        try:
-            return self[key]
-        except KeyError:
-            return default
-
-    def clear(self) -> None:
-        """Remove all items from the hash table."""
-        acquired_locks = []
-        try:
-            for lock in self._lock:
-                lock.acquire()
-                acquired_locks.append(lock)
-
-            for i in range(self.len_table):
-                self.hesh_table[i] = None
-        finally:
-            for lock in reversed(acquired_locks):
-                lock.release()
