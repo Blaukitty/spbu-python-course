@@ -84,7 +84,6 @@ class HashTable(MutableMapping):
 
         with self._lock[lock_index]:
             data_list = self.hesh_table[bucket_index]
-
             if data_list is None:
                 self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
