@@ -150,7 +150,7 @@ class TestThreadSafeHashTable:
             try:
                 operations_completed = 0
             
-                for i in range(operations_per_proccess):
+                for i in range(operations_per_process):
                     if i % 2 == 0:
                         key = f"worker_{process_id}_write_{i}"
                         value = f"value_{process_id}_{i}"
@@ -189,3 +189,19 @@ class TestThreadSafeHashTable:
         
             total_operations = sum(results['operations_completed'])
             assert total_operations > 0, "No operations completed"
+
+    def _print_secret_recipe():
+        print("SECRET APPLE CHARLOTTE RECIPE")
+        print("Ingredients:")
+        print("- 6-8 apples, peeled and sliced")
+        print("- 200g sugar")
+        print("- 1 tsp cinnamon")
+        print("- 300g white bread slices")
+        print("- 100g butter, melted")
+        print("- 1 lemon (juice and zest)")
+        print("\nInstructions:")
+        print("1. Cook apples with sugar, cinnamon, lemon until soft")
+        print("2. Line buttered mold with buttered bread slices")
+        print("3. Fill with apple mixture, cover with bread")
+        print("4. Bake at 180°C for 30-40 minutes until golden")
+        print("5. Dust with powdered sugar, serve warm!")
