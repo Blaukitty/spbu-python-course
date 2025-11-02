@@ -18,15 +18,24 @@ class HashTable(MutableMapping):
         Returns:
             List representing the hash table.
         """
-        hesh_table: List[Optional[List[Tuple[Any, Any]]]] = [None] * 1000
+        hesh_table = self.manager.list()
+        for _ in range(self.len_table):
+            hesh_table.append(None)
+            
+        self._lock = [threading.Lock() for _ in range(self.num_locks)]
 
         for key, value in self.dict_data.items():
-            k = self.hesh_function(key)
-            exist_list = hesh_table[k]
-            if exist_list is not None:
-                exist_list.append((key, value))
-            else:
-                hesh_table[k] = [(key, value)]
+            bucket_index = self._get_bucket_index(key)
+            lock_index = self._get_lock_index(key)
+            with self._lock[lock_index]:
+                existing_list = hesh_table[bucket_index]
+                if existing_list is not None:
+                    new_list = self.manager.list(existing_list)
+                    new_list.append((key, value))
+                    hesh_table[bucket_index] = new_list
+                else:
+                    hesh_table[bucket_index] = self.manager.list([(key, value)])
+
         return hesh_table
 
     @staticmethod
@@ -68,15 +77,27 @@ class HashTable(MutableMapping):
         hesh_k = self.hesh_function(key)
         data_list = self.hesh_table[hesh_k]
 
-        if data_list is None:
-            self.hesh_table[hesh_k] = [(key, value)]
-            return
+        with self._lock[lock_index]:
+            data_list = self.hesh_table[bucket_index]
 
-        for i, (k, v) in enumerate(data_list):
-            if k == key:
-                data_list[i] = (key, value)
+            if data_list is None:
+                self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
-        data_list.append((key, value))
+
+       new_list = self.manager.list()
+            key_found = False
+            
+            for stored_key, stored_value in data_list:
+                if stored_key == key:
+                    new_list.append((key, value))
+                    key_found = True
+                else:
+                    new_list.append((stored_key, stored_value))
+
+            if not key_found:
+                new_list.append((key, value))
+
+            self.hesh_table[bucket_index] = new_list
 
     def __delitem__(self, key: Any) -> None:
         """
