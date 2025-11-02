@@ -4,7 +4,7 @@ from multiprocessing import Manager
 from typing import Any, Iterator, List, Optional, Tuple
 
 
-class HashTable(MutableMapping):
+class UpHashTable(MutableMapping):
     """
     A thread-safe hash table implementation using multiprocessing Manager
     for inter-process communication with fine-grained locking.
