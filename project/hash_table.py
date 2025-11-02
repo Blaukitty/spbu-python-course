@@ -18,7 +18,7 @@ class HashTable(MutableMapping):
         Returns:
             List representing the hash table.
         """
-         hesh_table: List[Optional[List[Tuple[Any, Any]]]] = [None] * 1000
+        hesh_table: List[Optional[List[Tuple[Any, Any]]]] = [None] * 1000
 
         for key, value in self.dict_data.items():
             k = self.hesh_function(key)
@@ -68,27 +68,15 @@ class HashTable(MutableMapping):
         hesh_k = self.hesh_function(key)
         data_list = self.hesh_table[hesh_k]
 
-        with self._lock[lock_index]:
-            data_list = self.hesh_table[bucket_index]
-
-            if data_list is None:
-                self.hesh_table[bucket_index] = self.manager.list([(key, value)])
+        if data_list is None:
+            self.hesh_table[hesh_k] = [(key, value)]
+            return
+        
+        for i, (k, v) in enumerate(data_list):
+            if k == key:
+                data_list[i] = (key, value)
                 return
-
-            new_list = self.manager.list()
-            key_found = False
-            
-            for stored_key, stored_value in data_list:
-                if stored_key == key:
-                    new_list.append((key, value))
-                    key_found = True
-                else:
-                    new_list.append((stored_key, stored_value))
-
-            if not key_found:
-                new_list.append((key, value))
-
-            self.hesh_table[bucket_index] = new_list
+        data_list.append((key, value))
 
     def __delitem__(self, key: Any) -> None:
         """
