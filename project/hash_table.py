@@ -84,7 +84,7 @@ class HashTable(MutableMapping):
                 self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
 
-        new_list = self.manager.list()
+            new_list = self.manager.list()
             key_found = False
             
             for stored_key, stored_value in data_list:
