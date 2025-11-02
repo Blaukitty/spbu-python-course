@@ -18,24 +18,15 @@ class HashTable(MutableMapping):
         Returns:
             List representing the hash table.
         """
-        hesh_table = self.manager.list()
-        for _ in range(self.len_table):
-            hesh_table.append(None)
-            
-        self._lock = [threading.Lock() for _ in range(self.num_locks)]
+         hesh_table: List[Optional[List[Tuple[Any, Any]]]] = [None] * 1000
 
         for key, value in self.dict_data.items():
-            bucket_index = self._get_bucket_index(key)
-            lock_index = self._get_lock_index(key)
-            with self._lock[lock_index]:
-                existing_list = hesh_table[bucket_index]
-                if existing_list is not None:
-                    new_list = self.manager.list(existing_list)
-                    new_list.append((key, value))
-                    hesh_table[bucket_index] = new_list
-                else:
-                    hesh_table[bucket_index] = self.manager.list([(key, value)])
-
+            k = self.hesh_function(key)
+            exist_list = hesh_table[k]
+            if exist_list is not None:
+                exist_list.append((key, value))
+            else:
+                hesh_table[k] = [(key, value)]
         return hesh_table
 
     @staticmethod
