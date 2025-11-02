@@ -9,7 +9,7 @@ class TestThreadSafeHashTable:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Initialize fresh HashTable before each test"""
-        self.ht = HashTable(num_locks=4, len_table=50)
+        self.ht = UpHashTable(num_locks=4, len_table=50)
 
     def test_basic_functionality(self):
         """Test that all basic dictionary methods work correctly"""
@@ -89,7 +89,7 @@ class TestThreadSafeHashTable:
         num_processes = 8
         operations_per_process = 50
         
-        high_contention_ht = HashTable(num_locks=2, len_table=10)
+        high_contention_ht = UpHashTable(num_locks=2, len_table=10)
         
         def worker(process_id, shared_ht, results):
             """Worker process performing mixed operations under high lock contention"""
