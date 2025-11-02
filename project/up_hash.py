@@ -14,7 +14,7 @@ class UpHashTable(MutableMapping):
         self,
         num_locks: int = 20,
         len_table: int = 1000,
-        dict_data: Optional[dict] = None
+        dict_data: Optional[dict] = None,
     ) -> None:
         """
         Initialize the hash table.
@@ -24,7 +24,7 @@ class UpHashTable(MutableMapping):
         self.len_table = len_table
         self.manager = Manager()
         self.hesh_table = self._init_hesh_table()
-        
+
     def _init_hesh_table(self) -> Any:
         """
         Initialize hash table from dictionary data.
@@ -32,7 +32,7 @@ class UpHashTable(MutableMapping):
         hesh_table = self.manager.list()
         for _ in range(self.len_table):
             hesh_table.append(None)
-            
+
         self._lock = [self.manager.Lock() for _ in range(self.num_locks)]
 
         for key, value in self.dict_data.items():
@@ -95,7 +95,7 @@ class UpHashTable(MutableMapping):
 
             items = list(data_list)
             key_found = False
-            
+
             for i, (stored_key, stored_value) in enumerate(items):
                 if stored_key == key:
                     items[i] = (key, value)
@@ -121,7 +121,7 @@ class UpHashTable(MutableMapping):
 
             new_list = self.manager.list()
             key_found = False
-            
+
             for stored_key, stored_value in data_list:
                 if stored_key == key:
                     key_found = True

@@ -71,7 +71,7 @@ class HashTable(MutableMapping):
         if data_list is None:
             self.hesh_table[hesh_k] = [(key, value)]
             return
-        
+
         for i, (k, v) in enumerate(data_list):
             if k == key:
                 data_list[i] = (key, value)
