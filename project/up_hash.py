@@ -37,7 +37,6 @@ class HashTable(MutableMapping):
         Returns:
             List representing the hash table
         """
-        # Create shared list with proper type handling
         hesh_table = self.manager.list()
         for _ in range(self.len_table):
             hesh_table.append(None)
@@ -50,12 +49,10 @@ class HashTable(MutableMapping):
             with self._lock[lock_index]:
                 existing_list = hesh_table[bucket_index]
                 if existing_list is not None:
-                    # Create new shared list and update
                     new_list = self.manager.list(existing_list)
                     new_list.append((key, value))
                     hesh_table[bucket_index] = new_list
                 else:
-                    # Create new shared list for this bucket
                     hesh_table[bucket_index] = self.manager.list([(key, value)])
 
         return hesh_table
@@ -67,6 +64,7 @@ class HashTable(MutableMapping):
     def _get_bucket_index(self, key: Any) -> int:
         """Get bucket index for a key."""
         return abs(hash(key)) % self.len_table
+
     def __getitem__(self, key: Any) -> Any:
         """
         Get the value associated with the key.
@@ -112,7 +110,6 @@ class HashTable(MutableMapping):
                 self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
 
-            # Create new list to avoid modifying shared list directly
             new_list = self.manager.list()
             key_found = False
             
