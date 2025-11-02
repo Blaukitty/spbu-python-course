@@ -67,7 +67,6 @@ class HashTable(MutableMapping):
     def _get_bucket_index(self, key: Any) -> int:
         """Get bucket index for a key."""
         return abs(hash(key)) % self.len_table
-
     def __getitem__(self, key: Any) -> Any:
         """
         Get the value associated with the key.
