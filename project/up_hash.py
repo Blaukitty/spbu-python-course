@@ -33,7 +33,7 @@ class UpHashTable(MutableMapping):
         for _ in range(self.len_table):
             hesh_table.append(None)
             
-        self._lock = [threading.Lock() for _ in range(self.num_locks)]
+        self._lock = [self.manager.Lock() for _ in range(self.num_locks)]
 
         for key, value in self.dict_data.items():
             bucket_index = self._get_bucket_index(key)
@@ -41,9 +41,14 @@ class UpHashTable(MutableMapping):
             with self._lock[lock_index]:
                 existing_list = hesh_table[bucket_index]
                 if existing_list is not None:
-                    new_list = self.manager.list(existing_list)
-                    new_list.append((key, value))
-                    hesh_table[bucket_index] = new_list
+                    new_list = list(existing_list)
+                    for i, (k, v) in enumerate(new_list):
+                        if k == key:
+                            new_list[i] = (key, value)
+                            break
+                    else:
+                        new_list.append((key, value))
+                    hesh_table[bucket_index] = self.manager.list(new_list)
                 else:
                     hesh_table[bucket_index] = self.manager.list([(key, value)])
 
@@ -88,20 +93,19 @@ class UpHashTable(MutableMapping):
                 self.hesh_table[bucket_index] = self.manager.list([(key, value)])
                 return
 
-            new_list = self.manager.list()
+            items = list(data_list)
             key_found = False
             
-            for stored_key, stored_value in data_list:
+            for i, (stored_key, stored_value) in enumerate(items):
                 if stored_key == key:
-                    new_list.append((key, value))
+                    items[i] = (key, value)
                     key_found = True
-                else:
-                    new_list.append((stored_key, stored_value))
+                    break
 
             if not key_found:
-                new_list.append((key, value))
+                items.append((key, value))
 
-            self.hesh_table[bucket_index] = new_list
+            self.hesh_table[bucket_index] = self.manager.list(items)
 
     def __delitem__(self, key: Any) -> None:
         """
@@ -138,17 +142,17 @@ class UpHashTable(MutableMapping):
         """
         acquired_locks = []
         try:
-            for lock in self._lock:
-                lock.acquire()
-                acquired_locks.append(lock)
+            for i in range(self.num_locks):
+                self._lock[i].acquire()
+                acquired_locks.append(i)
 
             for data_list in self.hesh_table:
                 if data_list is not None:
                     for key, _ in data_list:
                         yield key
         finally:
-            for lock in reversed(acquired_locks):
-                lock.release()
+            for lock_index in reversed(acquired_locks):
+                self._lock[lock_index].release()
 
     def __len__(self) -> int:
         """
