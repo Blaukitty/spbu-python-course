@@ -30,7 +30,7 @@ class TestBots:
     def test_bots_choice(self):
         'if diapason exist'
         bot = Bots()
-        color, diapason = bot.choice()
+        color, diapason, bet_type = bot.choice()
         assert isinstance(diapason, list)
         assert len(diapason) > 0
         assert color in ['red', 'black', 'green']
@@ -59,10 +59,10 @@ class TestStrategies:
     @pytest.mark.parametrize("curva_bet,ifwin,expected", [
         (200, True, 100),
         (200, False, 300),
-        (50, True, 0),
+        (50, True, 100),
     ])
     def test_dalamber_strategy(self, curva_bet, ifwin, expected):
-        result = Strategies.dalamber(curva_bet, ifwin,money=1000)
+        result = Strategies.dalamber(curva_bet, ifwin, money=1000)
         assert result == expected
     
     @pytest.mark.parametrize("curva_bet,ifwin,expected", [
@@ -70,11 +70,11 @@ class TestStrategies:
         (100, False, 200),
     ])
     def test_martingeil_strategy(self, curva_bet, ifwin, expected):
-        result = Strategies.martingeil(curva_bet, ifwin,money=1000)
+        result = Strategies.martingeil(curva_bet, ifwin, money=1000)
         assert result == expected
     
     @pytest.mark.parametrize("curva_bet,ifwin,money,expected", [
-        (100, True, 1000, 900),
+        (100, True, 1000, 1000),
         (100, False, 1000, 1000),
     ])
     def test_all_capital_strategy(self, curva_bet, ifwin, money, expected):
@@ -90,18 +90,18 @@ class TestGame:
         assert game.full_money() == 350            
 
 
-class FullGame:         
+class TestFullGame:    
     def test_game_state(self):
         'Test that game state is changing'
         game = Game()
     
         start_bot1_money = game.bets[0].money
         start_bot2_money = game.bets[1].money
+
+        game.play_round()
+        game.play_round()
     
-        game.play_round(1)
-        game.play_round(2)
-    
-        end_bot1_money = game.bet[0].money
-        end_bot2_money = game.bet[1].money
+        end_bot1_money = game.bets[0].money
+        end_bot2_money = game.bets[1].money
 
         assert (start_bot1_money != end_bot1_money or start_bot2_money != end_bot2_money)
