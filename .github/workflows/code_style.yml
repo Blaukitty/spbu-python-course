@@ -27,7 +27,7 @@ jobs:
 
       - name: Run type checking with mypy
         run: |
-          python -m mypy ./task4
+          python -m mypy project/task4/
 
       - name: Run tests with pytest
         run: |
