@@ -2,17 +2,22 @@ from random import randint
 from typing import Tuple, List, Optional
 from .constants import Color, BetType, StrategyType
 
+
 class Bots:
-    def __init__(self, number1_b: Optional[int] = None, number2_b: Optional[int] = None) -> None:
+    def __init__(
+        self, number1_b: Optional[int] = None, number2_b: Optional[int] = None
+    ) -> None:
         self.diapason: List[int] = []
         self.color_b: Optional[str] = None
-        self.indicator: int = randint(StrategyType.DALAMBER.value, StrategyType.ALL_CAPITAL.value)
+        self.indicator: int = randint(
+            StrategyType.DALAMBER.value, StrategyType.ALL_CAPITAL.value
+        )
         self.bet_type: BetType = BetType.SINGLE
         self.ifwin: bool = False
         self.number1_b: int = 0
         self.number2_b: int = 0
         self.selected_dozen: int = randint(1, 3)
-        self.selected_even_odd: str = 'even' if randint(1, 2) == 1 else 'odd'
+        self.selected_even_odd: str = "even" if randint(1, 2) == 1 else "odd"
 
     def choice(self) -> Tuple[str, List[int], BetType]:
         self.number1_b = randint(0, 30)

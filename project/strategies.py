@@ -2,12 +2,14 @@ from random import randint
 from typing import Optional
 from .constants import StrategyType, BASE_BET
 
+
 class Strategies:
     base_bet: int = BASE_BET
 
     @staticmethod
-    def choose_strategy(curva_bet: int, ifwin: bool, money: int,
-                       indicator: Optional[int] = None) -> int:
+    def choose_strategy(
+        curva_bet: int, ifwin: bool, money: int, indicator: Optional[int] = None
+    ) -> int:
         actual_indicator = StrategyType(randint(1, 3))
 
         if actual_indicator == StrategyType.DALAMBER:

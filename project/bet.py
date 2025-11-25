@@ -2,14 +2,19 @@ from random import randint
 from typing import Tuple, Optional
 from .constants import BetType, PAYOUTS, INITIAL_MONEY
 
+
 class Bet777:
     """Represents a betting entity with money management and bet types."""
-    
-    def __init__(self, money: int = INITIAL_MONEY, xbet: int = 100, 
-                 bet_type: Optional[BetType] = None) -> None:
+
+    def __init__(
+        self,
+        money: int = INITIAL_MONEY,
+        xbet: int = 100,
+        bet_type: Optional[BetType] = None,
+    ) -> None:
         """
         Initialize a betting entity.
-        
+
         Args:
             money: Initial amount of money
             xbet: Initial bet amount
@@ -27,7 +32,7 @@ class Bet777:
     def capital(self, money: int) -> None:
         """
         Set the capital amount.
-        
+
         Args:
             money: New money amount
         """
@@ -36,7 +41,7 @@ class Bet777:
     def bet(self, xbet: int) -> None:
         """
         Set the bet amount.
-        
+
         Args:
             xbet: New bet amount
         """

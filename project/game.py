@@ -6,6 +6,7 @@ from .bet import Bet777
 from .strategies import Strategies
 from .constants import BetType, StrategyType
 
+
 class Game:
     """Main game class that manages the roulette game with multiple bots."""
 
@@ -36,11 +37,11 @@ class Game:
     def remove_bankrupt_bots(self) -> None:
         """Remove bankrupt bots from the game."""
         indices_to_remove = []
-        
+
         for i in range(len(self.bots) - 1, -1, -1):
             if self.bets[i].is_bankrupt():
                 indices_to_remove.append(i)
-        
+
         for index in indices_to_remove:
             bot_number = index + 1
             print(f"~ Bot{bot_number} bankrupt and removed from the game ~")
@@ -57,10 +58,10 @@ class Game:
         current_bot: Bots = self.bots[bot_index]
 
         new_bet_value: int = Strategies.choose_strategy(
-            curva_bet=current_bot_bet.xbet, 
-            ifwin=current_bot.ifwin, 
-            money=current_bot_bet.money, 
-            indicator=current_bot.indicator
+            curva_bet=current_bot_bet.xbet,
+            ifwin=current_bot.ifwin,
+            money=current_bot_bet.money,
+            indicator=current_bot.indicator,
         )
 
         new_bet_value = min(new_bet_value, current_bot_bet.money)
@@ -70,15 +71,17 @@ class Game:
     def play_round(self) -> None:
         """Play one round of the game."""
         print(f"\nRound {self.flag + 1}:")
-        
+
         self.remove_bankrupt_bots()
-        
+
         if not self.bots:
             print("All bots are bankrupt! Game over.")
             return
 
         roulette_result = self.roulette.ruller_spin()
-        print(f"Roulette result: number {roulette_result[0]}, color {roulette_result[1]}")
+        print(
+            f"Roulette result: number {roulette_result[0]}, color {roulette_result[1]}"
+        )
         print(f"Bots remaining in game: {len(self.bots)}")
 
         for bot_index in range(len(self.bots)):
@@ -90,7 +93,9 @@ class Game:
             print(f"Bot{bot_index + 1} placed bet: {current_new_bet}")
 
             current_bot_choice = self.bots[bot_index].choice()
-            print(f"Bot{bot_index + 1} chose: color {current_bot_choice[0]}, numbers {current_bot_choice[1]}, bet type: {current_bot_choice[2].value}")
+            print(
+                f"Bot{bot_index + 1} chose: color {current_bot_choice[0]}, numbers {current_bot_choice[1]}, bet type: {current_bot_choice[2].value}"
+            )
 
             self.check_win(bot_index, roulette_result)
 
@@ -129,7 +134,10 @@ class Game:
 
         elif bot_bet_type == BetType.RANGE:
             if len(current_bot.diapason) == 1:
-                if current_bot.color_b == winning_color and winning_number in current_bot.diapason:
+                if (
+                    current_bot.color_b == winning_color
+                    and winning_number in current_bot.diapason
+                ):
                     is_win = True
                     payout_multiplier = 35
                     bet_description = f"number {current_bot.diapason[0]}"
@@ -155,15 +163,17 @@ class Game:
 
         if is_win:
             current_bet.money += self.gain
-            print(f'  Win! Bet: {bet_description}')
-            print(f'  - Payout: {payout_multiplier}:1')
-            print(f'  - Winnings: ${self.gain}')
+            print(f"  Win! Bet: {bet_description}")
+            print(f"  - Payout: {payout_multiplier}:1")
+            print(f"  - Winnings: ${self.gain}")
         else:
             current_bet.money -= current_bet.xbet
-            print(f'  Loss! Bet: {bet_description}')
-            print(f'  - Loss: ${current_bet.xbet}')
+            print(f"  Loss! Bet: {bet_description}")
+            print(f"  - Loss: ${current_bet.xbet}")
 
-        print(f" - strategy: {strategies[current_bot.indicator]}, capital now: {current_bet.money}\n")
+        print(
+            f" - strategy: {strategies[current_bot.indicator]}, capital now: {current_bet.money}\n"
+        )
         current_bot.ifwin = is_win
 
     def _is_in_dozen(self, number: int, dozen: int) -> bool:
@@ -223,5 +233,5 @@ class Game:
         if len(winners) == 1:
             print(f"Winner: Bot{winners[0] + 1} with ${max_money}!")
         else:
-            winner_names = ', '.join(f'Bot{i+1}' for i in winners)
+            winner_names = ", ".join(f"Bot{i+1}" for i in winners)
             print(f"Tie between bots: {winner_names} with ${max_money}")
