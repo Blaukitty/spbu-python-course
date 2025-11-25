@@ -1,6 +1,6 @@
 from random import randint
 from typing import Tuple, List
-from .constants import BetType, PAYOUTS, INITIAL_MONEY
+from task4.constants import BetType, PAYOUTS, INITIAL_MONEY
 
 class Bet777:
     def __init__(self, money: int = INITIAL_MONEY, xbet: int = 100, 
