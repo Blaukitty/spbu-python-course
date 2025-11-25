@@ -1,6 +1,6 @@
 from random import randint
 from typing import Optional
-from constants import StrategyType, BASE_BET
+from .constants import StrategyType, BASE_BET
 
 class Strategies:
     base_bet: int = BASE_BET
