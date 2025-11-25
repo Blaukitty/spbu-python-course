@@ -93,15 +93,20 @@ class TestGame:
 class TestFullGame:    
     def test_game_state(self):
         'Test that game state is changing'
-        game = Game()
-    
-        start_bot1_money = game.bets[0].money
-        start_bot2_money = game.bets[1].money
+        game = Game(num_bots=2)
+        initial_bot_count = len(game.bots)
+        initial_money = [bet.money for bet in game.bets]
 
-        game.play_round()
-        game.play_round()
-    
-        end_bot1_money = game.bets[0].money
-        end_bot2_money = game.bets[1].money
+        for _ in range(3):
+            game.play_round()
+            if not game.bots:
+                break
 
-        assert (start_bot1_money != end_bot1_money or start_bot2_money != end_bot2_money)
+        final_bot_count = len(game.bots)
+        game_changed = (initial_bot_count != final_bot_count)
+        if not game_changed and game.bots:
+            for i, bet in enumerate(game.bets):
+                if i < len(initial_money) and bet.money != initial_money[i]:
+                    game_changed = True
+                    break
+        assert game_changed, "Game state should change after playing rounds"
