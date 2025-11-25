@@ -1,10 +1,10 @@
 from random import randint
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 from constants import Color
 
 class Ruller:
     def __init__(self, color_cur: Optional[str] = None, number_cur: Optional[int] = None) -> None:
-        self.numbers: list[int] = list(range(0, 37))
+        self.numbers: List[int] = list(range(0, 37))
         self.number_cur: Optional[int] = number_cur
         self.color_cur: Optional[str] = color_cur
 
