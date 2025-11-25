@@ -7,7 +7,10 @@ from strategies import Strategies
 from constants import BetType, StrategyType
 
 class Game:
+    """Main game class that manages the roulette game with multiple bots."""
+    
     def __init__(self, num_bots: int = 2) -> None:
+        """Initialize the game with specified number of bots."""
         self.bots: List[Bots] = []
         self.bets: List[Bet777] = []
 
@@ -21,16 +24,17 @@ class Game:
         self.gain: int = 0
 
     def add_bot(self) -> None:
+        """Add a new bot to the game."""
         new_bot = Bots()
         new_bet = Bet777()
 
         self.bots.append(new_bot)
         self.bets.append(new_bet)
         new_bot.choice()
-        print(f"~ Бот{len(self.bots)} добавлен в игру ~")
+        print(f"~ Bot{len(self.bots)} added to the game ~")
 
     def remove_bankrupt_bots(self) -> None:
-        """Удаляет обанкротившихся ботов из игры"""
+        """Remove bankrupt bots from the game."""
         indices_to_remove = []
         
         for i in range(len(self.bots) - 1, -1, -1):
@@ -39,14 +43,16 @@ class Game:
         
         for index in indices_to_remove:
             bot_number = index + 1
-            print(f"~ Бот{bot_number} обанкротился и удален из игры ~")
+            print(f"~ Bot{bot_number} bankrupt and removed from the game ~")
             del self.bots[index]
             del self.bets[index]
 
     def full_money(self) -> int:
+        """Calculate total money in all bets."""
         return sum(bet.xbet for bet in self.bets)
 
     def apply_strategy(self, bot_index: int) -> int:
+        """Apply betting strategy for a specific bot."""
         current_bot_bet: Bet777 = self.bets[bot_index]
         current_bot: Bots = self.bots[bot_index]
 
@@ -62,31 +68,35 @@ class Game:
         return new_bet_value
 
     def play_round(self) -> None:
-        print(f"\nРаунд {self.flag + 1}:")а
+        """Play one round of the game."""
+        print(f"\nRound {self.flag + 1}:")
+        
         self.remove_bankrupt_bots()
+        
         if not self.bots:
-            print("Все боты обанкротились! Игра завершена.")
+            print("All bots are bankrupt! Game over.")
             return
 
         roulette_result = self.roulette.ruller_spin()
-        print(f"Рулетка выпала: число {roulette_result[0]}, цвет {roulette_result[1]}")
-        print(f"Осталось ботов в игре: {len(self.bots)}")
+        print(f"Roulette result: number {roulette_result[0]}, color {roulette_result[1]}")
+        print(f"Bots remaining in game: {len(self.bots)}")
 
         for bot_index in range(len(self.bots)):
             if self.bets[bot_index].is_bankrupt():
                 continue
 
-            print(f"Ход для Бота{bot_index + 1} ---")
+            print(f"Bot{bot_index + 1} turn ---")
             current_new_bet = self.apply_strategy(bot_index)
-            print(f"Бот{bot_index + 1} сделал ставку: {current_new_bet}")
+            print(f"Bot{bot_index + 1} placed bet: {current_new_bet}")
 
             current_bot_choice = self.bots[bot_index].choice()
-            print(f"Бот{bot_index + 1} выбрал: цвет {current_bot_choice[0]}, числа {current_bot_choice[1]}, тип ставки: {current_bot_choice[2].value}")
+            print(f"Bot{bot_index + 1} chose: color {current_bot_choice[0]}, numbers {current_bot_choice[1]}, bet type: {current_bot_choice[2].value}")
 
             self.check_win(bot_index, roulette_result)
 
     def check_win(self, bot_index: int, roulette_result: Tuple[int, str]) -> None:
-        strategies: Dict[int, str] = {1: "Даламбер", 2: "Мартингейл", 3: "Все в игру"}
+        """Check if bot won and update money accordingly."""
+        strategies: Dict[int, str] = {1: "D'Alembert", 2: "Martingale", 3: "All-in"}
         current_bot: Bots = self.bots[bot_index]
         current_bet: Bet777 = self.bets[bot_index]
         winning_number, winning_color = roulette_result
@@ -100,63 +110,64 @@ class Game:
         if bot_bet_type == BetType.SINGLE:
             is_win = winning_number in current_bot.diapason
             payout_multiplier = 35
-            bet_description = f"число {current_bot.diapason}"
+            bet_description = f"number {current_bot.diapason}"
 
         elif bot_bet_type == BetType.COLOR:
             is_win = winning_color == current_bot.color_b
             payout_multiplier = 2
-            bet_description = f"цвет {current_bot.color_b}"
+            bet_description = f"color {current_bot.color_b}"
 
         elif bot_bet_type == BetType.DOZEN:
             is_win = self._is_in_dozen(winning_number, current_bot.selected_dozen)
             payout_multiplier = 3
-            bet_description = f"дюжина {current_bot.selected_dozen}"
+            bet_description = f"dozen {current_bot.selected_dozen}"
 
         elif bot_bet_type == BetType.EVEN_ODD:
             is_win = self._is_even_odd(winning_number, current_bot.selected_even_odd)
             payout_multiplier = 2
-            bet_description = f"{'четные' if current_bot.selected_even_odd == 'even' else 'нечетные'} числа"
+            bet_description = f"{'even' if current_bot.selected_even_odd == 'even' else 'odd'} numbers"
 
         elif bot_bet_type == BetType.RANGE:
             if len(current_bot.diapason) == 1:
                 if current_bot.color_b == winning_color and winning_number in current_bot.diapason:
                     is_win = True
                     payout_multiplier = 35
-                    bet_description = f"число {current_bot.diapason[0]}"
+                    bet_description = f"number {current_bot.diapason[0]}"
                 else:
                     is_win = False
-                    bet_description = f"число {current_bot.diapason[0]}"
+                    bet_description = f"number {current_bot.diapason[0]}"
             else:
                 if winning_number in current_bot.diapason:
                     if current_bot.color_b == winning_color:
                         is_win = True
                         payout_multiplier = 2
-                        bet_description = f"диапазон {current_bot.diapason} с цветом"
+                        bet_description = f"range {current_bot.diapason} with color"
                     else:
                         is_win = True
                         payout_multiplier = 1
-                        bet_description = f"диапазон {current_bot.diapason}"
+                        bet_description = f"range {current_bot.diapason}"
                 else:
                     is_win = False
-                    bet_description = f"диапазон {current_bot.diapason}"
+                    bet_description = f"range {current_bot.diapason}"
 
         self.ifwin = is_win
         self.gain = current_bet.xbet * payout_multiplier if is_win else 0
 
         if is_win:
             current_bet.money += self.gain
-            print(f'  Выигрыш! Ставка: {bet_description}')
-            print(f'  - Выплата: {payout_multiplier}:1')
-            print(f'  - Выигрыш: ${self.gain}')
+            print(f'  Win! Bet: {bet_description}')
+            print(f'  - Payout: {payout_multiplier}:1')
+            print(f'  - Winnings: ${self.gain}')
         else:
             current_bet.money -= current_bet.xbet
-            print(f'  Проигрыш! Ставка: {bet_description}')
-            print(f'  - Потеря: ${current_bet.xbet}')
+            print(f'  Loss! Bet: {bet_description}')
+            print(f'  - Loss: ${current_bet.xbet}')
 
-        print(f" - стратегия: {strategies[current_bot.indicator]}, капитал теперь: {current_bet.money}\n")
+        print(f" - strategy: {strategies[current_bot.indicator]}, capital now: {current_bet.money}\n")
         current_bot.ifwin = is_win
 
     def _is_in_dozen(self, number: int, dozen: int) -> bool:
+        """Check if number belongs to specified dozen."""
         if dozen == 1:
             return 1 <= number <= 12
         elif dozen == 2:
@@ -166,6 +177,7 @@ class Game:
         return False
 
     def _is_even_odd(self, number: int, even_odd: str) -> bool:
+        """Check if number is even or odd."""
         if number == 0:
             return False
         if even_odd == "even":
@@ -175,9 +187,10 @@ class Game:
         return False
 
     def play_game(self, max_rounds: int = 30) -> None:
-        print(f"\nНачальные деньги:")
+        """Main game loop."""
+        print(f"\nStarting money:")
         for i, bet in enumerate(self.bets):
-            print(f"  Бот{i + 1}: ${bet.money}")
+            print(f"  Bot{i + 1}: ${bet.money}")
 
         round_count: int = 0
 
@@ -188,16 +201,17 @@ class Game:
             self.play_round()
 
             if not self.bots:
-                print("Все боты обанкротились!")
+                print("All bots are bankrupt!")
                 break
 
         self.declare_winner()
 
     def declare_winner(self) -> None:
-        print(" ~ Игра окончена ~ ")
+        """Declare the winner of the game."""
+        print(" ~ Game Over ~ ")
 
         if not self.bots:
-            print("Нет победителей - все боты обанкротились!")
+            print("No winners - all bots are bankrupt!")
             return
 
         bot_money = [(bet.money, i) for i, bet in enumerate(self.bets)]
@@ -207,7 +221,7 @@ class Game:
         winners = [i for money, i in bot_money if money == max_money]
 
         if len(winners) == 1:
-            print(f"Победитель: Бот{winners[0] + 1} с ${max_money}!")
+            print(f"Winner: Bot{winners[0] + 1} with ${max_money}!")
         else:
-            winner_names = ', '.join(f'Бот{i+1}' for i in winners)
-            print(f"Ничья между ботами: {winner_names} с ${max_money}")
+            winner_names = ', '.join(f'Bot{i+1}' for i in winners)
+            print(f"Tie between bots: {winner_names} with ${max_money}")
