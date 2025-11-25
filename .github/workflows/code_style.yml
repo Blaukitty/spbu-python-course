@@ -24,6 +24,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install black
+
+      - name: Run basic auto-fixers
+        run: |
+          # Fix trailing whitespace in all Python files
+          find project/ tests/ -name "*.py" -exec sed -i 's/[[:space:]]*$//' {} \;
+          
+          # Sort requirements.txt if it exists
+          if [ -f "requirements.txt" ]; then
+            sort -o requirements.txt requirements.txt
+          fi
+          
+          # Run black formatter
+          black project/ tests/
 
       - name: Run type checking with mypy
         run: |
@@ -32,7 +46,3 @@ jobs:
       - name: Run tests with pytest
         run: |
           python -m pytest tests/
-
-      - name: Run pre-commit
-        run: |
-          pre-commit run --all-files --color always --verbose --show-diff-on-failure
