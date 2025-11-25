@@ -1,3 +1,4 @@
+from random import randint
 from typing import Optional
 from constants import StrategyType, BASE_BET
 
