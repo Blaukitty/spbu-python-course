@@ -1,3 +1,4 @@
+from random import randint
 from typing import Tuple, List, Dict
 from roulette import Ruller
 from bot import Bots
@@ -61,12 +62,8 @@ class Game:
         return new_bet_value
 
     def play_round(self) -> None:
-        print(f"\nРаунд {self.flag + 1}:")
-
-        # Удаляем обанкротившихся ботов перед началом раунда
+        print(f"\nРаунд {self.flag + 1}:")а
         self.remove_bankrupt_bots()
-
-        # Проверяем, остались ли боты
         if not self.bots:
             print("Все боты обанкротились! Игра завершена.")
             return
@@ -76,7 +73,6 @@ class Game:
         print(f"Осталось ботов в игре: {len(self.bots)}")
 
         for bot_index in range(len(self.bots)):
-            # Проверяем, что бот еще не обанкротился (дополнительная проверка)
             if self.bets[bot_index].is_bankrupt():
                 continue
 
