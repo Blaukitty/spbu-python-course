@@ -8,7 +8,7 @@ from .constants import BetType, StrategyType
 
 class Game:
     """Main game class that manages the roulette game with multiple bots."""
-    
+
     def __init__(self, num_bots: int = 2) -> None:
         """Initialize the game with specified number of bots."""
         self.bots: List[Bots] = []
@@ -19,7 +19,7 @@ class Game:
 
         self.roulette: Ruller = Ruller()
         self.flag: int = 0
-        self.indicator: int = StrategyType(randint(1, 3))
+        self.indicator: StrategyType = StrategyType(randint(1, 3))
         self.ifwin: bool = False
         self.gain: int = 0
 
