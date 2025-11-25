@@ -3,7 +3,7 @@ from typing import Tuple, List, Optional
 from constants import Color, BetType, StrategyType
 
 class Bots:
-     def __init__(self, number1_b: Optional[int] = None, number2_b: Optional[int] = None) -> None:
+    def __init__(self, number1_b: Optional[int] = None, number2_b: Optional[int] = None) -> None:
         self.diapason: List[int] = []
         self.color_b: Optional[str] = None
         self.indicator: int = randint(StrategyType.DALAMBER.value, StrategyType.ALL_CAPITAL.value)
