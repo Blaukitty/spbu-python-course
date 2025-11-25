@@ -17,7 +17,6 @@ class BetType(Enum):
     EVEN_ODD = "even_odd"
     RANGE = "range"
 
-# Коэффициенты выплат
 PAYOUTS = {
     BetType.SINGLE: 35,
     BetType.COLOR: 2,
@@ -26,6 +25,5 @@ PAYOUTS = {
     BetType.RANGE: 2
 }
 
-# Базовые настройки
 BASE_BET = 100
 INITIAL_MONEY = 1000
