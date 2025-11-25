@@ -1,10 +1,10 @@
 from random import randint
 from typing import Tuple, List, Dict
-from task4.roulette import Ruller
-from task4.bot import Bots
-from task4.bet import Bet777
-from task4.strategies import Strategies
-from task4.constants import BetType, StrategyType
+from .roulette import Ruller
+from .bot import Bots
+from .bet import Bet777
+from .strategies import Strategies
+from .constants import BetType, StrategyType
 
 class Game:
     """Main game class that manages the roulette game with multiple bots."""
