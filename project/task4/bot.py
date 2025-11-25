@@ -1,11 +1,11 @@
 from random import randint
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 from constants import Color, BetType, StrategyType
 
 class Bots:
-    def __init__(self, number1_b: int = None, number2_b: int = None) -> None:
+     def __init__(self, number1_b: Optional[int] = None, number2_b: Optional[int] = None) -> None:
         self.diapason: List[int] = []
-        self.color_b: str = None
+        self.color_b: Optional[str] = None
         self.indicator: int = randint(StrategyType.DALAMBER.value, StrategyType.ALL_CAPITAL.value)
         self.bet_type: BetType = BetType.SINGLE
         self.ifwin: bool = False
@@ -28,7 +28,6 @@ class Bots:
             self.diapason.append(self.number1_b)
 
         self.color_b = self.color_choice()
-
         bet_types = list(BetType)
         self.bet_type = bet_types[randint(0, len(bet_types) - 1)]
 
