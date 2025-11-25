@@ -1,6 +1,6 @@
 from random import randint
 from typing import Tuple, Optional, List
-from .constants import Color
+from task4.constants import Color
 
 class Ruller:
     def __init__(self, color_cur: Optional[str] = None, number_cur: Optional[int] = None) -> None:
