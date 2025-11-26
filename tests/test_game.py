@@ -58,7 +58,6 @@ class TestBet777:
 
 
 class TestStrategies:
-
     @pytest.mark.parametrize(
         "curva_bet,ifwin,expected",
         [
